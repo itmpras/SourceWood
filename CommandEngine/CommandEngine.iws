@@ -33,7 +33,7 @@
   </component>
   <component name="DebuggerManager">
     <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/commandengine/controller/StringCommandEngineController.java" line="51" class="com.commandengine.controller.StringCommandEngineController" package="com.commandengine.controller">
+      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/commandengine/controller/StringCommandEngineController.java" line="77" class="com.commandengine.controller.StringCommandEngineController" package="com.commandengine.controller">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -46,7 +46,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/commandengine/controller/StringCommandEngineController.java" line="87" class="com.commandengine.controller.StringCommandEngineController" package="com.commandengine.controller">
+      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/commandengine/controller/StringCommandEngineController.java" line="113" class="com.commandengine.controller.StringCommandEngineController" package="com.commandengine.controller">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -103,7 +103,7 @@
       <file leaf-file-name="StringCommandEngineControllerTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/commandengine/controller/StringCommandEngineControllerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="44" column="93" selection-start="1227" selection-end="1245" vertical-scroll-proportion="0.0">
+            <state line="25" column="85" selection-start="827" selection-end="851" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -111,19 +111,30 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StringCommandEngineController.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="CommandEngineTestContext.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/commandengine/CommandEngineTestContext.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="45" column="13" selection-start="1397" selection-end="1397" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StringCommandEngineController.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/commandengine/controller/StringCommandEngineController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="86" column="0" selection-start="2937" selection-end="2937" vertical-scroll-proportion="0.5681818">
+            <state line="30" column="41" selection-start="960" selection-end="975" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CommandExecuter.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="CommandExecuter.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/commandengine/command/CommandExecuter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="17" selection-start="110" selection-end="110" vertical-scroll-proportion="0.0">
+            <state line="13" column="4" selection-start="190" selection-end="190" vertical-scroll-proportion="0.28754365">
               <folding />
             </state>
           </provider>
@@ -155,7 +166,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/commandengine/action/Command.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/commandengine/action/CommandExecuter.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/commandengine/action/ShowStatusCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/commandengine/action/ShowPriceCommand.java" />
@@ -168,9 +178,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/commandengine/intentions/IdentifierContextPair.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/commandengine/CommandEngineContext.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/commandengine/CommandEngineTestContext.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/commandengine/controller/StringCommandEngineControllerTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/commandengine/controller/CommandEngineController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/commandengine/controller/StringCommandEngineController.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/commandengine/controller/StringCommandEngineControllerTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/commandengine/command/CommandExecuter.java" />
       </list>
     </option>
   </component>
@@ -931,11 +942,11 @@
       <window_info id="Regex Tester" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3295699" sideWeight="0.6718925" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295699" sideWeight="0.6707727" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.6718925" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3281075" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.6707727" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32922733" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32922733" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1077,15 +1088,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/commandengine/CommandEngineTestContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="66" selection-start="875" selection-end="875" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/commandengine/intentions/ShowStatusIntention.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="14" selection-start="486" selection-end="486" vertical-scroll-proportion="0.0">
@@ -1114,22 +1116,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/commandengine/controller/StringCommandEngineControllerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="93" selection-start="1227" selection-end="1245" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/commandengine/command/CommandExecuter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="17" selection-start="110" selection-end="110" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/commandengine/controller/CommandEngineController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="76" selection-start="360" selection-end="360" vertical-scroll-proportion="0.0">
@@ -1139,9 +1125,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/commandengine/controller/StringCommandEngineControllerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="85" selection-start="827" selection-end="851" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/commandengine/CommandEngineTestContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="13" selection-start="1397" selection-end="1397" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/commandengine/controller/StringCommandEngineController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="86" column="0" selection-start="2937" selection-end="2937" vertical-scroll-proportion="0.5681818">
+        <state line="30" column="41" selection-start="960" selection-end="975" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/commandengine/command/CommandExecuter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="4" selection-start="190" selection-end="190" vertical-scroll-proportion="0.28754365">
           <folding />
         </state>
       </provider>

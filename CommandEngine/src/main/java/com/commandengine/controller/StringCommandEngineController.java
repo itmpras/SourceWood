@@ -45,7 +45,33 @@ public class StringCommandEngineController implements CommandEngineController<St
 	}
 
 	public List<CommandExecuter<String, String>> getCommandExecuterWithMatchingContext(String input) {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		logger.info("Fetching command executer for input {} ", input);
+		Map<Intentions, CommandExecuter<String, String>> intentionForInput = new HashMap<Intentions,
+				CommandExecuter<String, String>>();
+		ImmutableList.Builder<CommandExecuter<String, String>> listBuilder = ImmutableList.builder();
+
+		Set<String> strings = textParser.parseString(input);
+
+		if (strings == null) {
+			throw new IllegalArgumentException("No valid tokens found");
+		}
+
+
+		for (String token : strings) {
+			Map<Intentions, CommandExecuter<String, String>> intentionForWord = getIntentionForWordWithMatchingContext(token);
+			intentionForInput.putAll(intentionForWord);
+		}
+
+
+		logger.info("Command Executer Size  : ", intentionForInput.size());
+		Set<Intentions> keys = intentionForInput.keySet();
+
+		for (Intentions key : keys) {
+			listBuilder.add(intentionForInput.get(key));
+		}
+
+		return listBuilder.build();
+
 	}
 
 	public List<CommandExecuter<String, String>> getCommandExecuter(String input) {
@@ -100,5 +126,27 @@ public class StringCommandEngineController implements CommandEngineController<St
 		return result;
 	}
 
+	private Map<Intentions, CommandExecuter<String, String>> getIntentionForWordWithMatchingContext(String token) {
+		Map<Intentions, CommandExecuter<String, String>> result = new HashMap<Intentions, CommandExecuter<String,
+				String>>();
+		for (Intention intention : this.intentions) {
+
+			Set<String> strings = intention.intentionIdentifiers();
+			Set<String> context = intention.intentionContext();
+
+			if (strings.contains(token) && context.contains(token)) {
+				Intentions intentions = intention.getIntention();
+				if (!result.containsKey(intentions)) {
+					Commands intendedCommand = intention.getIntendedCommand();
+					if (!commandExecuterMap.containsKey(intendedCommand)) {
+						throw new IllegalStateException("Unable to find command execute for {}" + intendedCommand);
+					}
+					result.put(intention.getIntention(), commandExecuterMap.get(intendedCommand));
+				}
+			}
+
+		}
+		return result;
+	}
 
 }

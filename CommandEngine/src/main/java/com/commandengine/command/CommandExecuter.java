@@ -10,5 +10,7 @@ public interface CommandExecuter<U, T> {
 	public T execute(U input);
 
 	public Commands type();
+
+
 }
 
