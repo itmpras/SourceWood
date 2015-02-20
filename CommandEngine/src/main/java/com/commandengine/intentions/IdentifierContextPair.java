@@ -1,5 +1,6 @@
 package com.commandengine.intentions;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -10,6 +11,12 @@ import java.util.Set;
 public class IdentifierContextPair {
 	private Set<String> identifiers;
 	private Set<String> context;
+
+	public IdentifierContextPair() {
+		identifiers = new HashSet<String>();
+		context = new HashSet<String>();
+	}
+
 
 	public IdentifierContextPair(Set<String> identifiers, Set<String> context) {
 		this.identifiers = identifiers;

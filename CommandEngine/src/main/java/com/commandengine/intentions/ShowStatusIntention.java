@@ -2,6 +2,7 @@ package com.commandengine.intentions;
 
 import com.commandengine.command.Commands;
 import com.commandengine.intentions.dao.IntentionsDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -17,6 +18,7 @@ import java.util.Set;
 public class ShowStatusIntention implements Intention {
 
 	private IdentifierContextPair pair;
+	@Autowired
 	private IntentionsDao intentionsDao;
 
 	@PostConstruct

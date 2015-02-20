@@ -3,6 +3,8 @@ package com.commandengine;
 import com.commandengine.command.CommandExecuter;
 import com.commandengine.command.Commands;
 import com.commandengine.intentions.Intention;
+import com.commandengine.stringparser.TextParser;
+import com.commandengine.stringparser.stringtokenizer.StringTextParserImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -43,5 +45,4 @@ public class CommandEngineContext {
 	public Map<Commands, CommandExecuter<String, String>> commandExecuterMap() {
 		return commandExecuterMap;
 	}
-
 }

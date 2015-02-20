@@ -12,4 +12,6 @@ import java.util.List;
 public interface CommandEngineController<U, T> {
 
 	public List<CommandExecuter<U, T>> getCommandExecuter(U input);
+
+	public List<CommandExecuter<U, T>> getCommandExecuterWithMatchingContext(U input);
 }
