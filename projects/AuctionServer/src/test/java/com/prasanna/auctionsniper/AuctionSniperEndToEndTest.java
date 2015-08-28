@@ -1,5 +1,7 @@
 package com.prasanna.auctionsniper;
 
+import com.prasanna.applicationrunner.ApplicationRunner;
+import com.prasanna.auctionserver.FakeAuctionServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +17,8 @@ public class AuctionSniperEndToEndTest {
     @Before
     public void setUp() throws Exception {
 
-        auction = new FakeAuctionServer("item-123 ");
-        auctionSnipper = new AppplicationRunner();
+        auction = new FakeAuctionServer("54321");
+        auctionSnipper = new ApplicationRunner();
     }
 
     @Test
@@ -39,6 +41,5 @@ public class AuctionSniperEndToEndTest {
     public void closeApplication() throws Exception {
 
         auctionSnipper.close();
-
     }
 }
