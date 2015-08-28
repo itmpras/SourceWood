@@ -1,6 +1,7 @@
 package com.prasanna.applicationrunner;
 
 import com.prasanna.auctionserver.FakeAuctionServer;
+import com.prasanna.auctionsniper.ui.Main;
 
 /**
  * Created by gopinithya on 26/08/15.
@@ -8,9 +9,9 @@ import com.prasanna.auctionserver.FakeAuctionServer;
 public class ApplicationRunner {
 
     public static final String XMPP_HOST = "localhost";
-    public static final String USER_NAME = "sniper";
-    public static final String PASSWORD = "sniper";
-    AuctionSniperDriver driver;
+    public static final String SNIPER_ID = "sniper";
+    public static final String SNIPER_PASSWORD = "sniper";
+    private AuctionSniperDriver driver;
 
     public ApplicationRunner() {
 
@@ -23,21 +24,29 @@ public class ApplicationRunner {
             @Override
             public void run() {
 
-                AuctionSniper.main(XMPP_HOST, USER_NAME, PASSWORD, auction.getItemId());
+                try {
+                    Main.main(XMPP_HOST, SNIPER_ID, SNIPER_PASSWORD, auction.getItemId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
 
         thread.setDaemon(true);
         thread.start();
         driver = new AuctionSniperDriver(1000);
-        driver.showsSniperStatus("Joining");
+        driver.showsSniperStatus(Main.STATUS_JOINING);
     }
 
     public void showsSniperHasLostAuction() {
 
+        driver.showsSniperStatus(Main.STATUS_LOST);
     }
 
     public void close() {
 
+        if (driver != null) {
+            driver.dispose();
+        }
     }
 }
