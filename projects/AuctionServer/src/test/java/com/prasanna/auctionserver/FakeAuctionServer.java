@@ -65,7 +65,6 @@ public class FakeAuctionServer {
     }
 
     public String getItemId() {
-
         return itemId;
     }
 }

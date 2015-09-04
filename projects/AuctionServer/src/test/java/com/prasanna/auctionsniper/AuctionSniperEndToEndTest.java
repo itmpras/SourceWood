@@ -12,23 +12,37 @@ import org.junit.Test;
 public class AuctionSniperEndToEndTest {
 
     private FakeAuctionServer auction;
-    private ApplicationRunner auctionSnipper;
+    private ApplicationRunner application;
 
     @Before
     public void setUp() throws Exception {
 
         auction = new FakeAuctionServer("54321");
-        auctionSnipper = new ApplicationRunner();
+        application = new ApplicationRunner();
     }
 
     @Test
     public void auctionSnipperJoinsTillAuctionCloses() throws Exception {
 
         auction.startSellingItem();
-        auctionSnipper.startBiddingIn(auction);
+        application.startBiddingIn(auction);
         auction.hasReceivedJoinRequstFromSniper();
         auction.announceClosed();
-        auctionSnipper.showsSniperHasLostAuction();
+        application.showsSniperHasLostAuction();
+    }
+
+    @Test
+    public void snipperMakesHigherBidButLoses() throws Exception {
+
+        auction.startSellingItem();
+        application.startBiddingIn(auction);
+        auction.hasReceivedJoinRequstFromSniper();
+        auction.reportPrice(1000, 98, "OtherBidder");
+        application.hasShownSnipperIsBidding();
+        auction.hasReceivedBid(1098, application.SNIPER_ID);
+        auction.announceClosed();
+        application.showsSniperHasLostAuction();
+
     }
 
     @After
@@ -40,6 +54,6 @@ public class AuctionSniperEndToEndTest {
     @After
     public void closeApplication() throws Exception {
 
-        auctionSnipper.close();
+        application.close();
     }
 }
