@@ -26,7 +26,7 @@ public class AuctionSniperEndToEndTest {
 
         auction.startSellingItem();
         application.startBiddingIn(auction);
-        auction.hasReceivedJoinRequstFromSniper();
+        auction.hasReceivedJoinRequstFromSniper(ApplicationRunner.SNIPER_ID);
         auction.announceClosed();
         application.showsSniperHasLostAuction();
     }
@@ -36,10 +36,10 @@ public class AuctionSniperEndToEndTest {
 
         auction.startSellingItem();
         application.startBiddingIn(auction);
-        auction.hasReceivedJoinRequstFromSniper();
+        auction.hasReceivedJoinRequstFromSniper(ApplicationRunner.SNIPER_ID);
         auction.reportPrice(1000, 98, "OtherBidder");
         application.hasShownSnipperIsBidding();
-        auction.hasReceivedBid(1098, application.SNIPER_ID);
+        auction.hasReceivedBid(1098, ApplicationRunner.SNIPER_ID);
         auction.announceClosed();
         application.showsSniperHasLostAuction();
 

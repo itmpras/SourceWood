@@ -1,5 +1,6 @@
 package com.prasanna.auctionsniper.ui;
 
+import com.prasanna.auctionsniper.*;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -7,17 +8,29 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
 
-public class Main {
+public class Main implements SniperListner {
 
     public static final String STATUS_JOINING = "Joining";
     public static final String STATUS_LOST = "Lost";
+    public static final String STATUS_BIDDING = "Bidding";
     public static final String RESOURCE = "Auction";
     public static final String ITEM_ID_AS_LOGIN = "auction-item-%s";
     public static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + RESOURCE;
 
+    public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Event: JOIN, User: %s ";
+    public static final String BID_COMMAD_FORMAT = "SOLVersion: 1.1; Event: BID, Price: %d ";
+    public static final String PRICE_COMMAND_FORMAT = "SOLVersion: 1.1; Event: PRICE; " +
+            "CurrentPrice: %d; Increment: %d; Bidder: %s ";
+
     private MainWindow ui;
     private Chat notToBeGCd;
+    private AuctionSniper auctionSniper;
+    private AuctionMessageTranslator auctionMessageTranslator;
 
     public Main() throws Exception {
 
@@ -38,23 +51,27 @@ public class Main {
     private void joinAuction(String xmppHost, String userName, String password, String itemId, final Main main) throws XMPPException {
 
         XMPPConnection xmppConnection = connectTo(xmppHost, userName, password);
-        Chat chat = xmppConnection.getChatManager().createChat(getAutionId(itemId, xmppConnection), new MessageListener() {
+        disconnectConnectionOnClose(xmppConnection);
+
+        final Chat chat = xmppConnection.getChatManager().createChat(getAutionId(itemId, xmppConnection), null);
+        XMPPAuction xmppAuction = new XMPPAuction(chat);
+        auctionSniper = new AuctionSniper(xmppAuction, this);
+        auctionMessageTranslator = new AuctionMessageTranslator(auctionSniper);
+        this.notToBeGCd = chat;
+        chat.addMessageListener(auctionMessageTranslator);
+        xmppAuction.join(userName);
+    }
+
+    private void disconnectConnectionOnClose(final XMPPConnection xmppConnection) {
+
+        ui.addWindowListener(new WindowAdapter() {
             @Override
-            public void processMessage(Chat chat, Message message) {
+            public void windowClosed(WindowEvent e) {
 
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        main.ui.showStatus(STATUS_LOST);
-                    }
-                });
-
+                super.windowClosed(e);
+                xmppConnection.disconnect();
             }
         });
-
-        this.notToBeGCd = chat;
-        chat.sendMessage(new Message());
     }
 
     private static String getAutionId(String itemId, XMPPConnection xmppConnection) {
@@ -81,4 +98,69 @@ public class Main {
         });
 
     }
+
+    @Override
+    public void sniperLost() {
+
+        updateUIStatus(STATUS_LOST);
+    }
+
+    private void updateUIStatus(final String status) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+
+                ui.showStatus(status);
+            }
+        });
+    }
+
+    @Override
+    public void sniperBidding() {
+
+        updateUIStatus(STATUS_BIDDING);
+    }
+
+    public static class XMPPAuction implements Auction {
+
+        private final Chat chat;
+
+        public XMPPAuction(Chat chat) {
+
+            this.chat = chat;
+        }
+
+        @Override
+        public void join(String userName) {
+
+            String joinMessage = String.format(JOIN_COMMAND_FORMAT, userName);
+            sendMessage(joinMessage);
+        }
+
+        @Override
+        public void bid(int amount) {
+
+            String message = String.format(BID_COMMAD_FORMAT, amount);
+            sendMessage(message);
+
+        }
+
+        private void sendMessage(String message) {
+
+            Message bidMessage = new Message();
+            bidMessage.setBody(message);
+            try {
+                // TODO to refactor
+                chat.sendMessage(bidMessage);
+            } catch (XMPPException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
+
+
+
+

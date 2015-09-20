@@ -1,7 +1,17 @@
 package com.prasanna.auctionserver;
 
+import com.prasanna.applicationrunner.ApplicationRunner;
+import com.prasanna.auctionsniper.ui.Main;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
+import org.hamcrest.core.StringContains;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.StringContains.containsString;
 
 /**
  * Created by gopinithya on 26/08/15.
@@ -49,14 +59,23 @@ public class FakeAuctionServer {
         fakeAuctionServer.startSellingItem();
     }
 
-    public void hasReceivedJoinRequstFromSniper() throws InterruptedException {
+    public void hasReceivedJoinRequstFromSniper(String userName) throws InterruptedException {
 
-        singleMessageListener.receivedAMessage();
+        receivedAMessageMatching(equalTo(String.format(
+                Main.JOIN_COMMAND_FORMAT, userName)), userName);
+    }
+
+    private void receivedAMessageMatching(Matcher<String> stringMatcher, String user) throws InterruptedException {
+
+        singleMessageListener.receivedAMessageAs(stringMatcher);
+        assertThat(currentChat.getParticipant(), containsString(user));
     }
 
     public void announceClosed() throws XMPPException {
 
-        currentChat.sendMessage(new Message());
+        Message closeMessge = new Message();
+        closeMessge.setBody("SOLVersion: 1.1; Event: CLOSE;");
+        currentChat.sendMessage(closeMessge);
     }
 
     public void closeAuction() {
@@ -65,7 +84,24 @@ public class FakeAuctionServer {
     }
 
     public String getItemId() {
+
         return itemId;
+    }
+
+    public void reportPrice(int price, int minimumIncrement, String otherBidder) throws XMPPException {
+
+        Message priceMessage = new Message();
+        priceMessage.setBody(String.format(Main.PRICE_COMMAND_FORMAT,
+                price, minimumIncrement, otherBidder));
+        currentChat.sendMessage(
+                priceMessage);
+    }
+
+    public void hasReceivedBid(int price, String sniperId) throws InterruptedException {
+
+        assertThat(currentChat.getParticipant(), containsString(sniperId));
+        receivedAMessageMatching(is(equalTo(
+                String.format(Main.BID_COMMAD_FORMAT, price))), sniperId);
     }
 }
 

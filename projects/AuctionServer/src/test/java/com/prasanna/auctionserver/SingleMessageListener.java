@@ -1,5 +1,6 @@
 package com.prasanna.auctionserver;
 
+import org.hamcrest.Matcher;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
@@ -20,8 +21,10 @@ public class SingleMessageListener implements MessageListener {
         messageArrayBlockingQueue.add(message);
     }
 
-    public void receivedAMessage() throws InterruptedException {
+    public void receivedAMessageAs(Matcher<String> stringMatcher) throws InterruptedException {
 
-        assertThat("Messages", messageArrayBlockingQueue.poll(5, TimeUnit.SECONDS), is(notNullValue()));
+        Message message = messageArrayBlockingQueue.poll(5, TimeUnit.SECONDS);
+        assertThat("Messages", message, is(notNullValue()));
+        assertThat(message.getBody(), stringMatcher);
     }
 }
