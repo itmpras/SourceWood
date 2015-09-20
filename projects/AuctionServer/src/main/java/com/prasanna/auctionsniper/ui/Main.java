@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 
-public class Main implements SniperListner {
+public class Main {
 
     public static final String STATUS_JOINING = "Joining";
     public static final String STATUS_LOST = "Lost";
@@ -55,7 +55,8 @@ public class Main implements SniperListner {
 
         final Chat chat = xmppConnection.getChatManager().createChat(getAutionId(itemId, xmppConnection), null);
         XMPPAuction xmppAuction = new XMPPAuction(chat);
-        auctionSniper = new AuctionSniper(xmppAuction, this);
+        SniperStateDisplayer sniperStateDisplayer = new SniperStateDisplayer(this.ui);
+        auctionSniper = new AuctionSniper(xmppAuction, sniperStateDisplayer);
         auctionMessageTranslator = new AuctionMessageTranslator(auctionSniper);
         this.notToBeGCd = chat;
         chat.addMessageListener(auctionMessageTranslator);
@@ -97,29 +98,6 @@ public class Main implements SniperListner {
             }
         });
 
-    }
-
-    @Override
-    public void sniperLost() {
-
-        updateUIStatus(STATUS_LOST);
-    }
-
-    private void updateUIStatus(final String status) {
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-
-                ui.showStatus(status);
-            }
-        });
-    }
-
-    @Override
-    public void sniperBidding() {
-
-        updateUIStatus(STATUS_BIDDING);
     }
 
     public static class XMPPAuction implements Auction {

@@ -13,6 +13,8 @@ public class AuctionMessageTranslator implements MessageListener {
     public static final String EVENT = "Event";
     public static final String CLOSE_EVENT = "CLOSE";
     public static final String CURENT_PRICE_EVENT = "PRICE";
+    public static final String CURRENT_PRICE = "CurrentPrice";
+    public static final String INCREMENT = "Increment";
     private AuctionEventListner auctionEventListner;
 
     public AuctionMessageTranslator(AuctionEventListner auctionEventListner) {
@@ -23,27 +25,69 @@ public class AuctionMessageTranslator implements MessageListener {
     @Override
     public void processMessage(Chat unusedChat, Message closeMessage) {
 
-        HashMap<String, String> receivedMessage = unpackRawMessage(closeMessage);
+        AuctionEvent auctionEvent = AuctionEvent.fromMessage(closeMessage);
 
-        String event = receivedMessage.get(EVENT);
-        if (CLOSE_EVENT.equals(event)) {
+
+        if (CLOSE_EVENT.equals(auctionEvent.type())) {
             auctionEventListner.auctionClosed();
-        } else if (CURENT_PRICE_EVENT.equals(event)) {
-            String currentPrice = receivedMessage.get("CurrentPrice");
-            String increment = receivedMessage.get("Increment");
-            auctionEventListner.currentPrice(Integer.parseInt(currentPrice), Integer.parseInt(increment));
+        } else if (CURENT_PRICE_EVENT.equals(auctionEvent.type())) {
+            auctionEventListner.currentPrice(auctionEvent.currentPrice(), auctionEvent.increment());
         }
     }
 
-    private HashMap<String, String> unpackRawMessage(Message closeMessage) {
+    private static class AuctionEvent {
 
-        HashMap<String, String> messagePair = new HashMap<String, String>();
-        String body = closeMessage.getBody();
-        String[] split = body.split(";");
-        for (String tokens : split) {
-            String[] pairs = tokens.split(":");
-            messagePair.put(pairs[0].trim(), pairs[1].trim());
+        private HashMap<String, String> messageMap;
+
+        private AuctionEvent(HashMap<String, String> messageMap) {
+
+            this.messageMap = messageMap;
         }
-        return messagePair;
+
+        public String type() {
+
+            return getString(EVENT);
+        }
+
+        public int currentPrice() {
+
+            return getInt(CURRENT_PRICE);
+        }
+
+        public int increment() {
+
+            return getInt(INCREMENT);
+        }
+
+        private int getInt(String currentPrice) {
+
+            String value = messageMap.get(currentPrice);
+            return Integer.parseInt(value);
+        }
+
+        private String getString(String key) {
+
+            return messageMap.get(key);
+        }
+
+        public static AuctionEvent fromMessage(Message message) {
+
+            return new AuctionEvent(unpackRawMessage(message));
+        }
+
+        private static HashMap<String, String> unpackRawMessage(Message message) {
+
+            HashMap<String, String> messagePair = new HashMap<String, String>();
+            String body = message.getBody();
+            String[] split = body.split(";");
+            for (String tokens : split) {
+                String[] pairs = tokens.split(":");
+                messagePair.put(pairs[0].trim(), pairs[1].trim());
+            }
+            return messagePair;
+        }
     }
+
 }
+
+

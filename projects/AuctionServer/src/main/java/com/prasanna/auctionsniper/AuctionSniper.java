@@ -1,6 +1,5 @@
 package com.prasanna.auctionsniper;
 
-import org.jivesoftware.smack.XMPPException;
 
 /**
  * Created by gopinithya on 05/09/15.
