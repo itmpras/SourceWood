@@ -1,6 +1,5 @@
 package com.prasanna.auctionsniper;
 
-
 /**
  * Created by gopinithya on 05/09/15.
  */
@@ -8,6 +7,7 @@ public class AuctionSniper implements AuctionEventListner {
 
     private final SniperListner sniperListner;
     private final Auction auction;
+    private boolean isWinning = false;
 
     public AuctionSniper(Auction auction, SniperListner sniperListner) {
 
@@ -18,13 +18,31 @@ public class AuctionSniper implements AuctionEventListner {
     @Override
     public void auctionClosed() {
 
-        sniperListner.sniperLost();
+        if (isWinning) {
+            sniperListner.sniperWon();
+        } else {
+            sniperListner.sniperLost();
+        }
     }
 
     @Override
-    public void currentPrice(int price, int increment) {
+    public void currentPrice(PriceSource priceSource, int price, int increment) {
 
-        auction.bid(price + increment);
-        sniperListner.sniperBidding();
+        switch (priceSource) {
+            case FromOtherBidder:
+                auction.bid(price + increment);
+                sniperListner.sniperBidding();
+                break;
+            case FromSnipper:
+                isWinning = true;
+                sniperListner.sniperWinning();
+                break;
+        }
+    }
+
+    @Override
+    public void snipperWinning() {
+
+        sniperListner.sniperWinning();
     }
 }

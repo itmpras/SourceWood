@@ -7,7 +7,11 @@ import java.util.EventListener;
  */
 public interface SniperListner extends EventListener {
 
-    public void sniperLost();
+    void sniperLost();
 
     void sniperBidding();
+
+    void sniperWinning();
+
+    void sniperWon();
 }

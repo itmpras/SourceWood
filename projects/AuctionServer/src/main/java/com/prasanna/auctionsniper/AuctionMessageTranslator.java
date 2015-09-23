@@ -15,10 +15,13 @@ public class AuctionMessageTranslator implements MessageListener {
     public static final String CURENT_PRICE_EVENT = "PRICE";
     public static final String CURRENT_PRICE = "CurrentPrice";
     public static final String INCREMENT = "Increment";
+    public static final String BIDDER = "Bidder";
     private AuctionEventListner auctionEventListner;
+    private final String snipperID;
 
-    public AuctionMessageTranslator(AuctionEventListner auctionEventListner) {
+    public AuctionMessageTranslator(String snipperId, AuctionEventListner auctionEventListner) {
 
+        this.snipperID = snipperId;
         this.auctionEventListner = auctionEventListner;
     }
 
@@ -27,12 +30,19 @@ public class AuctionMessageTranslator implements MessageListener {
 
         AuctionEvent auctionEvent = AuctionEvent.fromMessage(closeMessage);
 
-
         if (CLOSE_EVENT.equals(auctionEvent.type())) {
             auctionEventListner.auctionClosed();
         } else if (CURENT_PRICE_EVENT.equals(auctionEvent.type())) {
-            auctionEventListner.currentPrice(auctionEvent.currentPrice(), auctionEvent.increment());
+            auctionEventListner.currentPrice(getPriceSource(auctionEvent.isFrom()), auctionEvent.currentPrice(), auctionEvent.increment());
         }
+    }
+
+    private AuctionEventListner.PriceSource getPriceSource(String bidder) {
+
+        if (snipperID.equals(bidder))
+            return AuctionEventListner.PriceSource.FromSnipper;
+
+        return AuctionEventListner.PriceSource.FromOtherBidder;
     }
 
     private static class AuctionEvent {
@@ -57,6 +67,11 @@ public class AuctionMessageTranslator implements MessageListener {
         public int increment() {
 
             return getInt(INCREMENT);
+        }
+
+        public String isFrom() {
+
+            return getString(BIDDER);
         }
 
         private int getInt(String currentPrice) {

@@ -38,4 +38,16 @@ public class SniperStateDisplayer implements SniperListner {
 
         updateUIStatus(Main.STATUS_BIDDING);
     }
+
+    @Override
+    public void sniperWinning() {
+
+        updateUIStatus(Main.STATUS_WINNING);
+    }
+
+    @Override
+    public void sniperWon() {
+
+        updateUIStatus(Main.STATUS_WON);
+    }
 }

@@ -17,6 +17,7 @@ public class Main {
 
     public static final String STATUS_JOINING = "Joining";
     public static final String STATUS_LOST = "Lost";
+    public static final String STATUS_WON = "Won";
     public static final String STATUS_BIDDING = "Bidding";
     public static final String RESOURCE = "Auction";
     public static final String ITEM_ID_AS_LOGIN = "auction-item-%s";
@@ -26,11 +27,13 @@ public class Main {
     public static final String BID_COMMAD_FORMAT = "SOLVersion: 1.1; Event: BID, Price: %d ";
     public static final String PRICE_COMMAND_FORMAT = "SOLVersion: 1.1; Event: PRICE; " +
             "CurrentPrice: %d; Increment: %d; Bidder: %s ";
+    public static final String STATUS_WINNING = "Winning";
 
     private MainWindow ui;
     private Chat notToBeGCd;
     private AuctionSniper auctionSniper;
     private AuctionMessageTranslator auctionMessageTranslator;
+    public static final String SNIPER_ID = "sniper";
 
     public Main() throws Exception {
 
@@ -57,7 +60,7 @@ public class Main {
         XMPPAuction xmppAuction = new XMPPAuction(chat);
         SniperStateDisplayer sniperStateDisplayer = new SniperStateDisplayer(this.ui);
         auctionSniper = new AuctionSniper(xmppAuction, sniperStateDisplayer);
-        auctionMessageTranslator = new AuctionMessageTranslator(auctionSniper);
+        auctionMessageTranslator = new AuctionMessageTranslator(SNIPER_ID, auctionSniper);
         this.notToBeGCd = chat;
         chat.addMessageListener(auctionMessageTranslator);
         xmppAuction.join(userName);
@@ -123,6 +126,7 @@ public class Main {
             sendMessage(message);
 
         }
+
 
         private void sendMessage(String message) {
 
