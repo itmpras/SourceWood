@@ -12,6 +12,7 @@ public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
     private AuctionSniperDriver driver;
+    private String itemID;
 
     public ApplicationRunner() {
 
@@ -36,6 +37,7 @@ public class ApplicationRunner {
         thread.start();
         driver = new AuctionSniperDriver(1000);
         driver.showsSniperStatus(Main.STATUS_JOINING);
+        itemID = auction.getItemId();
     }
 
     public void showsSniperHasLostAuction() {
@@ -50,17 +52,18 @@ public class ApplicationRunner {
         }
     }
 
-    public void hasShownSnipperIsBidding() {
+    public void hasShownSnipperIsBidding(int lastPrice, int lastBid) {
 
-        driver.showsSniperStatus(Main.STATUS_BIDDING);
+        driver.showsSniperStatus(itemID, lastPrice, lastBid, Main.STATUS_BIDDING);
     }
 
-    public void showsSniperHasWonAuction() {
+    public void showsSniperHasWonAuction(int lastPrice) {
 
-        driver.showsSniperStatus(Main.STATUS_WON);
+        driver.showsSniperStatus(itemID, lastPrice, lastPrice, Main.STATUS_WON);
     }
 
-    public void hasShownSniperIsWinning() {
-        driver.showsSniperStatus(Main.STATUS_WINNING);
+    public void hasShownSniperIsWinning(int winningBid) {
+
+        driver.showsSniperStatus(itemID, winningBid, winningBid, Main.STATUS_WINNING);
     }
 }

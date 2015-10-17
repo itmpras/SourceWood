@@ -25,5 +25,8 @@
         <module name="AuctionServer" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="1.7">
+      <module name="AuctionServer" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>

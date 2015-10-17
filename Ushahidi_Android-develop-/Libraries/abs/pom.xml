@@ -11,9 +11,7 @@
 		<groupId>com.actionbarsherlock</groupId>
 		<artifactId>parent</artifactId>
 		<version>4.2.0</version>
-		<relativePath>../pom.xml</relativePath>
 	</parent>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>

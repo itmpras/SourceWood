@@ -59,7 +59,7 @@ public class Main {
         final Chat chat = xmppConnection.getChatManager().createChat(getAutionId(itemId, xmppConnection), null);
         XMPPAuction xmppAuction = new XMPPAuction(chat);
         SniperStateDisplayer sniperStateDisplayer = new SniperStateDisplayer(this.ui);
-        auctionSniper = new AuctionSniper(xmppAuction, sniperStateDisplayer);
+        auctionSniper = new AuctionSniper(xmppAuction, sniperStateDisplayer, SniperSnapshot.joinning(itemId));
         auctionMessageTranslator = new AuctionMessageTranslator(SNIPER_ID, auctionSniper);
         this.notToBeGCd = chat;
         chat.addMessageListener(auctionMessageTranslator);
@@ -126,7 +126,6 @@ public class Main {
             sendMessage(message);
 
         }
-
 
         private void sendMessage(String message) {
 

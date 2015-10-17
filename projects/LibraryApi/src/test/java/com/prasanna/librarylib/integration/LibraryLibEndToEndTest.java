@@ -18,7 +18,8 @@ import static com.prasanna.librarylib.makers.InventoryItemMaker.INVENTORY_ITEM;
 public class LibraryLibEndToEndTest {
 
     private JUnitRuleMockery jUnitRuleMockery = new JUnitRuleMockery();
-    private Inventory inventory = new MapBackedInventory();
+    // TODO to refactor the contructor
+    private Inventory inventory = new MapBackedInventory(null);
 
     private ApplicationRunner applicationRunner = new ApplicationRunner(inventory);
 

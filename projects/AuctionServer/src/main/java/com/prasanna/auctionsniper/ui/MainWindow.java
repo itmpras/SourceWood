@@ -1,5 +1,7 @@
 package com.prasanna.auctionsniper.ui;
 
+import com.prasanna.auctionsniper.SniperSnapshot;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -12,18 +14,34 @@ public class MainWindow extends JFrame {
 
     public static final String MAIN_WINDOW_NAME = "Auction Sniper";
     public static final String SNIPER_LABEL_NAME = "Action";
-
-    private final JLabel sniperStatus = createLabel(Main.STATUS_JOINING);
+    public static final String SNIPER_TABLE = "SniperTable";
+    private final SniperTableModel sniperTableModel = new SniperTableModel();
 
     public MainWindow() throws HeadlessException {
 
         super();
         setName(MAIN_WINDOW_NAME);
         setTitle(MAIN_WINDOW_NAME);
+        fillContentPanel(makeSniperTable());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        add(sniperStatus);
         setVisible(true);
-        setBounds(10, 20, 500, 100);
+
+    }
+
+    private void fillContentPanel(JTable jTable) {
+
+        final Container contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());
+        contentPane.add(new JScrollPane(jTable), BorderLayout.CENTER);
+
+    }
+
+    private JTable makeSniperTable() {
+
+        final JTable snipperTable = new JTable(sniperTableModel);
+        snipperTable.setName(SNIPER_TABLE);
+        return snipperTable;
+
     }
 
     private static JLabel createLabel(String text) {
@@ -35,6 +53,17 @@ public class MainWindow extends JFrame {
     }
 
     public void showStatus(String status) {
-        sniperStatus.setText(status);
+
+        sniperTableModel.setStatusText(status);
+    }
+
+    public static void main(String args[]) {
+
+        MainWindow mainWindow = new MainWindow();
+    }
+
+    public void snipperStateChanged(SniperSnapshot state) {
+
+        sniperTableModel.snipperStatusChanged(state);
     }
 }

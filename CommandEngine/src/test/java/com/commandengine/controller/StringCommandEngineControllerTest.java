@@ -42,7 +42,7 @@ public class StringCommandEngineControllerTest {
 	@Test
 	public void testControllerToFindShowCommand() throws Exception {
 
-		List<CommandExecuter<String, String>> commandExecuter = controller.getCommandExecuterWithMatchingContext("Show price");
+		List<CommandExecuter<String, String>> commandExecuter = controller.getCommandExecuter("Show price");
 		assertThat(commandExecuter, IsNull.notNullValue());
 		assertThat(commandExecuter, hasSize(1));
 

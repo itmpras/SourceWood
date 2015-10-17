@@ -1,9 +1,10 @@
 <component name="libraryTable">
   <library name="google-play-services_lib">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Libraries/google-play-services_lib/bin/google-play-services_lib.jar!/" />
+      <root url="file://$PROJECT_DIR$/Libraries/google-play-services_lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/Libraries/google-play-services_lib" recursive="false" />
   </library>
 </component>
