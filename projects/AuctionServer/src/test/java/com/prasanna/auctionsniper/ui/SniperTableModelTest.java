@@ -42,12 +42,12 @@ public class SniperTableModelTest {
         );
 
         String item_id = "item_id";
-        sniperTableModel.snipperStatusChanged(new SniperSnapshot(item_id, 555, 666,SniperState.BIDDING));
+        sniperTableModel.sniperStateChanged(new SniperSnapshot(item_id, 555, 666, SniperState.BIDDING));
 
         assertColumnEquals(Column.ITEM_IDENTIFIER, item_id);
         assertColumnEquals(Column.LAST_PRICE, 555);
         assertColumnEquals(Column.LAST_BID, 666);
-        assertColumnEquals(Column.SNIPER_STATE, Main.STATUS_BIDDING);
+        assertColumnEquals(Column.SNIPER_STATE, SniperTableModel.STATUS_BIDDING);
     }
 
     private void assertColumnEquals(Column column, Object value) {

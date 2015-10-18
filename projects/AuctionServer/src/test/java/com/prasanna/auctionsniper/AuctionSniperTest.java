@@ -9,6 +9,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.equalTo;
 
 /**
@@ -35,7 +36,7 @@ public class AuctionSniperTest {
 
         ruleMockery.checking(new Expectations() {
                                  {
-                                     exactly(1).of(sniperListner).sniperLost();
+                                     exactly(1).of(sniperListner).sniperStateChanged(with(aSniperThatIs(SniperState.LOST)));
                                  }
                              }
         );
@@ -52,7 +53,7 @@ public class AuctionSniperTest {
                                      ignoring(auction);
                                      allowing(sniperListner).sniperStateChanged(with(aSniperThatIs(SniperState.BIDDING)));
                                      then(sniperState.is("Bidding"));
-                                     atLeast(1).of(sniperListner).sniperLost();
+                                     atLeast(1).of(sniperListner).sniperStateChanged(with(aSniperThatIs(SniperState.LOST)));
                                      when(sniperState.is("Bidding"));
 
                                  }
@@ -72,7 +73,6 @@ public class AuctionSniperTest {
                                      ignoring(auction);
                                      allowing(sniperListner).sniperStateChanged(with(aSniperThatIs(SniperState.BIDDING)));
                                      then(sniperState.is("Bidding"));
-//                                     atLeast(1).of(sniperListner).sniperStateChanged(new SniperSnapshot(ITEM_ID, 125, 125, SniperState.WINNING));
                                      atLeast(1).of(sniperListner).sniperStateChanged(with(aSniperThatIs(SniperState.WINNING)));
                                      when(sniperState.is("Bidding"));
                                  }
@@ -107,9 +107,9 @@ public class AuctionSniperTest {
         ruleMockery.checking(new Expectations() {
                                  {
                                      ignoring(auction);
-                                     allowing(sniperListner).sniperBidding(with(aSniperThatIs(SniperState.BIDDING)));
+                                     allowing(sniperListner).sniperStateChanged(with(aSniperThatIs(SniperState.BIDDING)));
                                      then(sniperState.is("Bidding"));
-                                     atLeast(1).of(sniperListner).sniperWinning(with(any(SniperSnapshot.class)));
+                                     atLeast(1).of(sniperListner).sniperStateChanged(with(any(SniperSnapshot.class)));
                                      when(sniperState.is("Bidding"));
 
                                  }
@@ -124,9 +124,9 @@ public class AuctionSniperTest {
         ruleMockery.checking(new Expectations() {
                                  {
                                      ignoring(auction);
-                                     allowing(sniperListner).sniperStateChanged(with(any(SniperSnapshot.class)));
+                                     allowing(sniperListner).sniperStateChanged(with(aSniperThatIs(SniperState.WINNING)));
                                      then(sniperState.is("Winning"));
-                                     atLeast(1).of(sniperListner).sniperWon();
+                                     atLeast(1).of(sniperListner).sniperStateChanged(with(aSniperThatIs(SniperState.WON)));
                                      when(sniperState.is("Winning"));
 
                                  }

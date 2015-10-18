@@ -2,6 +2,8 @@ package com.prasanna.applicationrunner;
 
 import com.prasanna.auctionserver.FakeAuctionServer;
 import com.prasanna.auctionsniper.ui.Main;
+import com.prasanna.auctionsniper.ui.MainWindow;
+import com.prasanna.auctionsniper.ui.SniperTableModel;
 
 /**
  * Created by gopinithya on 26/08/15.
@@ -36,13 +38,15 @@ public class ApplicationRunner {
         thread.setDaemon(true);
         thread.start();
         driver = new AuctionSniperDriver(1000);
-        driver.showsSniperStatus(Main.STATUS_JOINING);
+        driver.hasTitle(MainWindow.MAIN_WINDOW_NAME);
+        driver.hasColumnTitles();
+        driver.showsSniperStatus(SniperTableModel.STATUS_JOINING);
         itemID = auction.getItemId();
     }
 
     public void showsSniperHasLostAuction() {
 
-        driver.showsSniperStatus(Main.STATUS_LOST);
+        driver.showsSniperStatus(SniperTableModel.STATUS_LOST);
     }
 
     public void close() {
@@ -54,16 +58,16 @@ public class ApplicationRunner {
 
     public void hasShownSnipperIsBidding(int lastPrice, int lastBid) {
 
-        driver.showsSniperStatus(itemID, lastPrice, lastBid, Main.STATUS_BIDDING);
+        driver.showsSniperStatus(itemID, lastPrice, lastBid, SniperTableModel.STATUS_BIDDING);
     }
 
     public void showsSniperHasWonAuction(int lastPrice) {
 
-        driver.showsSniperStatus(itemID, lastPrice, lastPrice, Main.STATUS_WON);
+        driver.showsSniperStatus(itemID, lastPrice, lastPrice, SniperTableModel.STATUS_WON);
     }
 
     public void hasShownSniperIsWinning(int winningBid) {
 
-        driver.showsSniperStatus(itemID, winningBid, winningBid, Main.STATUS_WINNING);
+        driver.showsSniperStatus(itemID, winningBid, winningBid, SniperTableModel.STATUS_WINNING);
     }
 }

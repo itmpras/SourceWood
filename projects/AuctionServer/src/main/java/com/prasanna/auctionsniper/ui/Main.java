@@ -2,7 +2,6 @@ package com.prasanna.auctionsniper.ui;
 
 import com.prasanna.auctionsniper.*;
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
@@ -10,15 +9,9 @@ import org.jivesoftware.smack.packet.Message;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.event.WindowStateListener;
 
 public class Main {
 
-    public static final String STATUS_JOINING = "Joining";
-    public static final String STATUS_LOST = "Lost";
-    public static final String STATUS_WON = "Won";
-    public static final String STATUS_BIDDING = "Bidding";
     public static final String RESOURCE = "Auction";
     public static final String ITEM_ID_AS_LOGIN = "auction-item-%s";
     public static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + RESOURCE;
@@ -27,13 +20,13 @@ public class Main {
     public static final String BID_COMMAD_FORMAT = "SOLVersion: 1.1; Event: BID, Price: %d ";
     public static final String PRICE_COMMAND_FORMAT = "SOLVersion: 1.1; Event: PRICE; " +
             "CurrentPrice: %d; Increment: %d; Bidder: %s ";
-    public static final String STATUS_WINNING = "Winning";
 
     private MainWindow ui;
     private Chat notToBeGCd;
     private AuctionSniper auctionSniper;
     private AuctionMessageTranslator auctionMessageTranslator;
     public static final String SNIPER_ID = "sniper";
+    private final SniperTableModel sniperTableModel = new SniperTableModel();
 
     public Main() throws Exception {
 
@@ -42,7 +35,7 @@ public class Main {
 
     public static void main(String args[]) throws Exception {
 
-        main("", "", "", "");
+        main("localhost", "sniper", "sniper", "54321");
     }
 
     public static void main(String xmppHost, String userName, String password, String itemId) throws Exception {
@@ -58,8 +51,8 @@ public class Main {
 
         final Chat chat = xmppConnection.getChatManager().createChat(getAutionId(itemId, xmppConnection), null);
         XMPPAuction xmppAuction = new XMPPAuction(chat);
-        SniperStateDisplayer sniperStateDisplayer = new SniperStateDisplayer(this.ui);
-        auctionSniper = new AuctionSniper(xmppAuction, sniperStateDisplayer, SniperSnapshot.joinning(itemId));
+        SwingThreadSniperListner swingThreadSniperListner = new SwingThreadSniperListner(sniperTableModel);
+        auctionSniper = new AuctionSniper(xmppAuction, swingThreadSniperListner, SniperSnapshot.joinning(itemId));
         auctionMessageTranslator = new AuctionMessageTranslator(SNIPER_ID, auctionSniper);
         this.notToBeGCd = chat;
         chat.addMessageListener(auctionMessageTranslator);
@@ -97,7 +90,7 @@ public class Main {
             @Override
             public void run() {
 
-                ui = new MainWindow();
+                ui = new MainWindow(sniperTableModel);
             }
         });
 

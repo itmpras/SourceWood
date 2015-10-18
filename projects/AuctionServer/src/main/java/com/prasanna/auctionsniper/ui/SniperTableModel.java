@@ -1,5 +1,6 @@
 package com.prasanna.auctionsniper.ui;
 
+import com.prasanna.auctionsniper.SniperListner;
 import com.prasanna.auctionsniper.SniperSnapshot;
 
 import javax.swing.table.AbstractTableModel;
@@ -7,11 +8,17 @@ import javax.swing.table.AbstractTableModel;
 /**
  * Created by gopinithya on 23/09/15.
  */
-public class SniperTableModel extends AbstractTableModel {
+public class SniperTableModel extends AbstractTableModel implements SniperListner {
 
-    private static String[] STATUS_TEXT = {Main.STATUS_JOINING, Main.STATUS_BIDDING,Main.STATUS_WINNING};
-    private volatile String statusText = Main.STATUS_JOINING;
-    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
+    public static final String STATUS_JOINING = "Joining";
+    public static final String STATUS_LOST = "Lost";
+    public static final String STATUS_WON = "Won";
+    public static final String STATUS_BIDDING = "Bidding";
+    public static final String STATUS_WINNING = "Winning";
+
+    private static String[] STATUS_TEXT = {STATUS_JOINING, STATUS_BIDDING, STATUS_WINNING, STATUS_LOST, STATUS_WON};
+    private volatile String statusText = STATUS_JOINING;
+    public final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
     private volatile SniperSnapshot sniperSnapshot = STARTING_UP;
 
     @Override
@@ -29,30 +36,25 @@ public class SniperTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
-        switch (Column.at(columnIndex)) {
-            case ITEM_IDENTIFIER:
-                return sniperSnapshot.itemID;
-            case LAST_BID:
-                return sniperSnapshot.lastBid;
-            case LAST_PRICE:
-                return sniperSnapshot.lastPrice;
-            case SNIPER_STATE:
-                return statusText;
-        }
+        return Column.at(columnIndex).valueIn(sniperSnapshot);
 
-        throw new IllegalArgumentException(" Invalid Column");
     }
 
-    public void setStatusText(String text) {
+    @Override
+    public String getColumnName(int column) {
 
-        statusText = text;
-        fireTableCellUpdated(0, 0);
+        return Column.at(column).name;
     }
 
-    public void snipperStatusChanged(SniperSnapshot newState) {
+    public void sniperStateChanged(SniperSnapshot newState) {
 
         sniperSnapshot = newState;
-        statusText = STATUS_TEXT[newState.sniperState.ordinal()];
+        statusText = textFor(newState);
         fireTableRowsUpdated(0, 0);
+    }
+
+    public static String textFor(SniperSnapshot newState) {
+
+        return STATUS_TEXT[newState.sniperState.ordinal()];
     }
 }

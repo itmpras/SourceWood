@@ -59,4 +59,10 @@ public class SniperSnapshot {
 
         return new SniperSnapshot(itemID, 0, 0, SniperState.JOINING);
     }
+
+    public SniperSnapshot closed() {
+
+        return new SniperSnapshot(itemID, lastPrice, lastBid, sniperState.whenAuctionClosed());
+    }
+
 }

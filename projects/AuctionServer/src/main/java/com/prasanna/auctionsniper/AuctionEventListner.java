@@ -12,6 +12,4 @@ public interface AuctionEventListner {
     void auctionClosed();
 
     void currentPrice(PriceSource priceSource, int price, int increment);
-
-    void snipperWinning();
 }
