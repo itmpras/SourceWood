@@ -27,6 +27,7 @@ public class MainWindow extends JFrame {
         fillContentPanel(makeSniperTable());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        setBounds(10, 10, 1000, 400);
     }
 
     private void fillContentPanel(JTable jTable) {
