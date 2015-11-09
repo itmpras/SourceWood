@@ -14,7 +14,7 @@ public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
     private AuctionSniperDriver driver;
-    private String itemID;
+
 
     public ApplicationRunner() {
 
@@ -41,7 +41,7 @@ public class ApplicationRunner {
         driver.hasTitle(MainWindow.MAIN_WINDOW_NAME);
         driver.hasColumnTitles();
         driver.showsSniperStatus(SniperTableModel.STATUS_JOINING);
-        itemID = auction.getItemId();
+
     }
 
     public void showsSniperHasLostAuction() {
@@ -56,18 +56,18 @@ public class ApplicationRunner {
         }
     }
 
-    public void hasShownSnipperIsBidding(int lastPrice, int lastBid) {
+    public void hasShownSnipperIsBidding(FakeAuctionServer auctionServer, int lastPrice, int lastBid) {
 
-        driver.showsSniperStatus(itemID, lastPrice, lastBid, SniperTableModel.STATUS_BIDDING);
+        driver.showsSniperStatus(auctionServer.getItemId() , lastPrice, lastBid, SniperTableModel.STATUS_BIDDING);
     }
 
-    public void showsSniperHasWonAuction(int lastPrice) {
+    public void showsSniperHasWonAuction(FakeAuctionServer auctionServer,int lastPrice) {
 
-        driver.showsSniperStatus(itemID, lastPrice, lastPrice, SniperTableModel.STATUS_WON);
+        driver.showsSniperStatus(auctionServer.getItemId(), lastPrice, lastPrice, SniperTableModel.STATUS_WON);
     }
 
-    public void hasShownSniperIsWinning(int winningBid) {
+    public void hasShownSniperIsWinning(FakeAuctionServer auctionServer,int winningBid) {
 
-        driver.showsSniperStatus(itemID, winningBid, winningBid, SniperTableModel.STATUS_WINNING);
+        driver.showsSniperStatus(auctionServer.getItemId(), winningBid, winningBid, SniperTableModel.STATUS_WINNING);
     }
 }
