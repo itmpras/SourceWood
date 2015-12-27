@@ -7,5 +7,5 @@ import java.util.EventListener;
  */
 public interface SniperListner extends EventListener {
 
-    void sniperStateChanged(SniperSnapshot sniperSnapshot);
+        void sniperStateChanged(SniperSnapshot sniperSnapshot);
 }

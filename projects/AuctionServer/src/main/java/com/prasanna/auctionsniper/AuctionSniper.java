@@ -18,14 +18,11 @@ public class AuctionSniper implements AuctionEventListner {
     }
 
     public void auctionClosed() {
-
         sniperSnapshot = sniperSnapshot.closed();
         notifyChange();
-
     }
 
     private void notifyChange() {
-
         sniperListner.sniperStateChanged(sniperSnapshot);
     }
 

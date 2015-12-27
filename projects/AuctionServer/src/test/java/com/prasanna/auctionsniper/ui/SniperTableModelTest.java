@@ -1,6 +1,8 @@
 package com.prasanna.auctionsniper.ui;
 
 import com.prasanna.auctionsniper.SniperSnapshot;
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
@@ -8,6 +10,7 @@ import org.junit.Test;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
@@ -33,6 +36,49 @@ public class SniperTableModelTest {
     @Test
     public void setSnipperValuesInColumns() throws Exception {
 
+        String item_id = "item_id";
+        SniperSnapshot joining = SniperSnapshot.joinning(item_id);
+        SniperSnapshot bidding = joining.bidding(555, 666);
+        ruleMockery.checking(
+                new Expectations() {
+                    {
+                        allowing(tableModelListener).tableChanged(with(anyInsertionEvent()));
+                        one(tableModelListener).tableChanged(with(aChangeInRow(0)));
+                    }
+
+
+                }
+        );
+
+        sniperTableModel.addSniper(joining);
+        sniperTableModel.sniperStateChanged(bidding);
+        assertRowMatchesState(0, bidding);
+        ruleMockery.assertIsSatisfied();
+    }
+
+    private Matcher<TableModelEvent> anyInsertionEvent() {
+        return new FeatureMatcher<TableModelEvent, Integer>(equalTo(TableModelEvent.INSERT), "Insert", "Row" +
+                "") {
+            @Override
+            protected Integer featureValueOf(TableModelEvent tableModelEvent) {
+                return tableModelEvent.getType();
+            }
+        };
+
+    }
+
+    private void assertRowMatchesState(int row, SniperSnapshot newState) {
+        assertColumnEquals(row, Column.ITEM_IDENTIFIER, newState.itemID);
+        assertColumnEquals(row, Column.LAST_PRICE, newState.lastPrice);
+        assertColumnEquals(row, Column.LAST_BID, newState.lastBid);
+        assertColumnEquals(row, Column.SNIPER_STATE, SniperTableModel.textFor(newState));
+    }
+
+    @Test
+    public void notifesListnerWhenAddingASniper() throws Exception {
+
+        SniperSnapshot joinning = SniperSnapshot.joinning("item123");
+
         ruleMockery.checking(
                 new Expectations() {
                     {
@@ -41,19 +87,47 @@ public class SniperTableModelTest {
                 }
         );
 
-        String item_id = "item_id";
-        sniperTableModel.sniperStateChanged(new SniperSnapshot(item_id, 555, 666, SniperState.BIDDING));
+        assertEquals(0, sniperTableModel.getRowCount());
+        sniperTableModel.addSniper(joinning);
 
-        assertColumnEquals(Column.ITEM_IDENTIFIER, item_id);
-        assertColumnEquals(Column.LAST_PRICE, 555);
-        assertColumnEquals(Column.LAST_BID, 666);
-        assertColumnEquals(Column.SNIPER_STATE, SniperTableModel.STATUS_BIDDING);
+        assertEquals(1, sniperTableModel.getRowCount());
+        assertRowMatchesState(0, joinning);
+
     }
 
-    private void assertColumnEquals(Column column, Object value) {
+    @Test
+    public void holdsSnipersInAdditionOrder() throws Exception {
 
-        int row = 0;
+        ruleMockery.checking(
+                new Expectations() {
+                    {
+                        ignoring(tableModelListener);
+                    }
+                }
+        );
+
+        sniperTableModel.addSniper(SniperSnapshot.joinning("item0"));
+        sniperTableModel.addSniper(SniperSnapshot.joinning("item1"));
+
+        assertColumnEquals(0, Column.ITEM_IDENTIFIER, "item0");
+        assertColumnEquals(1, Column.ITEM_IDENTIFIER, "item1");
+    }
+
+    private void assertColumnEquals(int row, Column column, Object value) {
+
         assertEquals(value, sniperTableModel.getValueAt(row, column.ordinal()));
+    }
+
+    private Matcher<TableModelEvent> aChangeInRow(int row) {
+
+        return new FeatureMatcher<TableModelEvent, Integer>(equalTo(row), "Change in Row", "Row" +
+                "") {
+            @Override
+            protected Integer featureValueOf(TableModelEvent tableModelEvent) {
+                return tableModelEvent.getFirstRow();
+            }
+        };
+
     }
 
 }

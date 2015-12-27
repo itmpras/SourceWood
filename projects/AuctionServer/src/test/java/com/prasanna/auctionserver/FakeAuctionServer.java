@@ -39,7 +39,8 @@ public class FakeAuctionServer {
     public void startSellingItem() throws XMPPException {
 
         xmppConnection.connect();
-        xmppConnection.login(String.format(ITEM_ID_AS_LOGIN, itemId), PASSWORD, RESOURCE);
+        String user = String.format(ITEM_ID_AS_LOGIN, itemId);
+        xmppConnection.login(user, PASSWORD, RESOURCE);
         xmppConnection.getChatManager().addChatListener(
                 new ChatManagerListener() {
                     @Override

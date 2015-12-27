@@ -28,7 +28,7 @@ public class SwingThreadSniperListner implements SniperListner {
         });
     }
 
-    public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
+      public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
 
         updateUIStatus(sniperSnapshot);
     }

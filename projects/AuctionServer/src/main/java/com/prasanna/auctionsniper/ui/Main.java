@@ -9,6 +9,8 @@ import org.jivesoftware.smack.packet.Message;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
 
@@ -22,7 +24,7 @@ public class Main {
             "CurrentPrice: %d; Increment: %d; Bidder: %s ";
 
     private MainWindow ui;
-    private Chat notToBeGCd;
+    private Set<Chat> notToBeGCd = new HashSet<Chat>();
     private AuctionSniper auctionSniper;
     private AuctionMessageTranslator auctionMessageTranslator;
     public static final String SNIPER_ID = "sniper";
@@ -30,34 +32,57 @@ public class Main {
 
     public Main() throws Exception {
 
+
         startUI();
     }
 
     public static void main(String args[]) throws Exception {
 
-        main("localhost", "sniper", "sniper", "54321");
-    }
-
-    public static void main(String xmppHost, String userName, String password, String itemId) throws Exception {
-
+        String hostName = args[0];
+        String userName = args[1];
+        String password = args[2];
+        XMPPConnection xmppConnection = connectTo(hostName, userName, password);
         final Main main = new Main();
-        main.joinAuction(xmppHost, userName, password, itemId, main);
+        main.disconnectConnectionOnClose(xmppConnection);
+        main.addUserRequestListnerForConnection(xmppConnection);
+
+       /* for (int i = 3; i < args.length; i++) {
+            main.joinAuctionWith(xmppConnection, args[i]);
+        } */
     }
 
-    private void joinAuction(String xmppHost, String userName, String password, String itemId, final Main main) throws XMPPException {
+    private void addUserRequestListnerForConnection(final XMPPConnection xmppConnection) {
+        ui.addUserRequestListner(new UserRequestListner() {
+            public void joinAuction(String itemid) {
+                joinAuctionWith(xmppConnection, itemid);
+            }
+        });
+    }
 
-        XMPPConnection xmppConnection = connectTo(xmppHost, userName, password);
-        disconnectConnectionOnClose(xmppConnection);
 
+    private void joinAuctionWith(XMPPConnection xmppConnection, String itemId) {
         final Chat chat = xmppConnection.getChatManager().createChat(getAutionId(itemId, xmppConnection), null);
         XMPPAuction xmppAuction = new XMPPAuction(chat);
         SwingThreadSniperListner swingThreadSniperListner = new SwingThreadSniperListner(sniperTableModel);
-        auctionSniper = new AuctionSniper(xmppAuction, swingThreadSniperListner, SniperSnapshot.joinning(itemId));
+        SniperSnapshot joinning = SniperSnapshot.joinning(itemId);
+        sniperTableModel.addSniper(joinning);
+        auctionSniper = new AuctionSniper(xmppAuction, swingThreadSniperListner, joinning);
         auctionMessageTranslator = new AuctionMessageTranslator(SNIPER_ID, auctionSniper);
-        this.notToBeGCd = chat;
+        this.notToBeGCd.add(chat);
         chat.addMessageListener(auctionMessageTranslator);
-        xmppAuction.join(userName);
+
+        xmppAuction.join(getUserFromConnection(xmppConnection));
     }
+
+    private String getUserFromConnection(XMPPConnection xmppConnection) {
+        String user = xmppConnection.getUser();
+        int indexOf = user.indexOf("@");
+        if (indexOf != -1) {
+            user = user.substring(0, indexOf);
+        }
+        return user;
+    }
+
 
     private void disconnectConnectionOnClose(final XMPPConnection xmppConnection) {
 
