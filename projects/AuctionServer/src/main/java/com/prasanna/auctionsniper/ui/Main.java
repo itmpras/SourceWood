@@ -24,15 +24,12 @@ public class Main {
             "CurrentPrice: %d; Increment: %d; Bidder: %s ";
 
     private MainWindow ui;
-    private Set<Chat> notToBeGCd = new HashSet<Chat>();
+    private Set<XMPPAuction> notToBeGCd = new HashSet<XMPPAuction>();
     private AuctionSniper auctionSniper;
-    private AuctionMessageTranslator auctionMessageTranslator;
     public static final String SNIPER_ID = "sniper";
     private final SniperTableModel sniperTableModel = new SniperTableModel();
 
     public Main() throws Exception {
-
-
         startUI();
     }
 
@@ -46,9 +43,6 @@ public class Main {
         main.disconnectConnectionOnClose(xmppConnection);
         main.addUserRequestListnerForConnection(xmppConnection);
 
-       /* for (int i = 3; i < args.length; i++) {
-            main.joinAuctionWith(xmppConnection, args[i]);
-        } */
     }
 
     private void addUserRequestListnerForConnection(final XMPPConnection xmppConnection) {
@@ -61,26 +55,14 @@ public class Main {
 
 
     private void joinAuctionWith(XMPPConnection xmppConnection, String itemId) {
-        final Chat chat = xmppConnection.getChatManager().createChat(getAutionId(itemId, xmppConnection), null);
-        XMPPAuction xmppAuction = new XMPPAuction(chat);
-        SwingThreadSniperListner swingThreadSniperListner = new SwingThreadSniperListner(sniperTableModel);
+
+        XMPPAuction xmppAuction = new XMPPAuction(xmppConnection, itemId);
         SniperSnapshot joinning = SniperSnapshot.joinning(itemId);
+        SwingThreadSniperListner swingThreadSniperListner = new SwingThreadSniperListner(sniperTableModel);
         sniperTableModel.addSniper(joinning);
-        auctionSniper = new AuctionSniper(xmppAuction, swingThreadSniperListner, joinning);
-        auctionMessageTranslator = new AuctionMessageTranslator(SNIPER_ID, auctionSniper);
-        this.notToBeGCd.add(chat);
-        chat.addMessageListener(auctionMessageTranslator);
-
-        xmppAuction.join(getUserFromConnection(xmppConnection));
-    }
-
-    private String getUserFromConnection(XMPPConnection xmppConnection) {
-        String user = xmppConnection.getUser();
-        int indexOf = user.indexOf("@");
-        if (indexOf != -1) {
-            user = user.substring(0, indexOf);
-        }
-        return user;
+        xmppAuction.addActionEventListner(new AuctionSniper(xmppAuction, swingThreadSniperListner, joinning));
+        this.notToBeGCd.add(xmppAuction);
+        xmppAuction.join();
     }
 
 
@@ -124,16 +106,21 @@ public class Main {
     public static class XMPPAuction implements Auction {
 
         private final Chat chat;
+        private final XMPPConnection xmppConnection;
+        private final Announcer<AuctionEventListner> auctionEventListnerAnnouncer = Announcer.to(AuctionEventListner.class);
 
-        public XMPPAuction(Chat chat) {
 
-            this.chat = chat;
+        public XMPPAuction(XMPPConnection xmppConnection, String itemId) {
+            this.xmppConnection = xmppConnection;
+            this.chat = xmppConnection.getChatManager().createChat(getAutionId(itemId, xmppConnection), null);
+            chat.addMessageListener(new AuctionMessageTranslator(SNIPER_ID, auctionEventListnerAnnouncer.announce()));
         }
 
         @Override
-        public void join(String userName) {
+        public void join() {
 
-            String joinMessage = String.format(JOIN_COMMAND_FORMAT, userName);
+            String userFromConnection = getUserFromConnection(xmppConnection);
+            String joinMessage = String.format(JOIN_COMMAND_FORMAT, userFromConnection);
             sendMessage(joinMessage);
         }
 
@@ -143,6 +130,10 @@ public class Main {
             String message = String.format(BID_COMMAD_FORMAT, amount);
             sendMessage(message);
 
+        }
+
+        public void addActionEventListner(AuctionEventListner eventListner) {
+            auctionEventListnerAnnouncer.addListener(eventListner);
         }
 
         private void sendMessage(String message) {
@@ -156,6 +147,16 @@ public class Main {
                 e.printStackTrace();
             }
         }
+
+        private String getUserFromConnection(XMPPConnection xmppConnection) {
+            String user = xmppConnection.getUser();
+            int indexOf = user.indexOf("@");
+            if (indexOf != -1) {
+                user = user.substring(0, indexOf);
+            }
+            return user;
+        }
+
     }
 
 }
