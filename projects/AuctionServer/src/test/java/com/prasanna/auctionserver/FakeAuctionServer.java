@@ -36,6 +36,10 @@ public class FakeAuctionServer {
         singleMessageListener = new SingleMessageListener();
     }
 
+    public XMPPConnection getXmppConnection() {
+        return xmppConnection;
+    }
+
     public void startSellingItem() throws XMPPException {
 
         xmppConnection.connect();

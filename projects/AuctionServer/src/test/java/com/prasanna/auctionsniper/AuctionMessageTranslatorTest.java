@@ -1,6 +1,7 @@
 package com.prasanna.auctionsniper;
 
 import com.prasanna.auctionsniper.ui.Main;
+import com.prasanna.auctionsniper.xmpp.AuctionMessageTranslator;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.jmock.Expectations;

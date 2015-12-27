@@ -1,5 +1,6 @@
-package com.prasanna.auctionsniper;
+package com.prasanna.auctionsniper.xmpp;
 
+import com.prasanna.auctionsniper.AuctionEventListner;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;

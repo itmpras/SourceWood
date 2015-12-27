@@ -2,9 +2,17 @@ package com.prasanna.auctionsniper;
 
 import com.prasanna.applicationrunner.ApplicationRunner;
 import com.prasanna.auctionserver.FakeAuctionServer;
+import com.prasanna.auctionsniper.xmpp.XMPPAuction;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by gopinithya on 26/08/15.
@@ -95,6 +103,39 @@ public class AuctionSniperEndToEndTest {
         application.showsSniperHasWonAuction(auction, 1098);
         application.showsSniperHasWonAuction(auction2, 1098);
 
+    }
+
+    @Test
+    public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
+        auction.startSellingItem();
+        CountDownLatch auctionClosed = new CountDownLatch(1);
+        XMPPConnection xmppConnection = getConnection();
+        Auction xmppAuction = new XMPPAuction(xmppConnection, auction.getItemId());
+        xmppAuction.addActionEventListner(auctionClosedListner(auctionClosed));
+        xmppAuction.join();
+        auction.hasReceivedJoinRequstFromSniper(ApplicationRunner.SNIPER_ID);
+        auction.announceClosed();
+        assertTrue("Should have closed", auctionClosed.await(2, TimeUnit.SECONDS));
+
+    }
+
+    public XMPPConnection getConnection() throws XMPPException {
+        XMPPConnection xmppConnection = new XMPPConnection(ApplicationRunner.XMPP_HOST);
+        xmppConnection.connect();
+        xmppConnection.login(ApplicationRunner.SNIPER_ID, ApplicationRunner.SNIPER_PASSWORD, "Auction");
+        return xmppConnection;
+    }
+
+    private AuctionEventListner auctionClosedListner(final CountDownLatch auctionClosed) {
+        return new AuctionEventListner() {
+            public void auctionClosed() {
+                auctionClosed.countDown();
+            }
+
+            public void currentPrice(PriceSource priceSource, int price, int increment) {
+
+            }
+        };
     }
 
     @After
