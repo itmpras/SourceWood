@@ -35,6 +35,11 @@ public class SniperSnapshot {
         return true;
     }
 
+    public boolean isForSameItemAs(SniperSnapshot sniperSnapshot) {
+        return this.itemID.equals(sniperSnapshot.itemID);
+    }
+
+
     @Override
     public int hashCode() {
 

@@ -1,9 +1,11 @@
 package com.prasanna.auctionsniper.ui;
 
+import com.objogate.exception.Defect;
 import com.prasanna.auctionsniper.SniperListner;
 import com.prasanna.auctionsniper.SniperSnapshot;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
 
 /**
  * Created by gopinithya on 23/09/15.
@@ -18,13 +20,11 @@ public class SniperTableModel extends AbstractTableModel implements SniperListne
 
     private static String[] STATUS_TEXT = {STATUS_JOINING, STATUS_BIDDING, STATUS_WINNING, STATUS_LOST, STATUS_WON};
     private volatile String statusText = STATUS_JOINING;
-    public final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
-    private volatile SniperSnapshot sniperSnapshot = STARTING_UP;
+    private ArrayList<SniperSnapshot> sniperSnapshots = new ArrayList<SniperSnapshot>();
 
     @Override
     public int getRowCount() {
-
-        return 1;
+        return sniperSnapshots.size();
     }
 
     @Override
@@ -36,6 +36,7 @@ public class SniperTableModel extends AbstractTableModel implements SniperListne
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
+        SniperSnapshot sniperSnapshot = sniperSnapshots.get(rowIndex);
         return Column.at(columnIndex).valueIn(sniperSnapshot);
 
     }
@@ -47,14 +48,36 @@ public class SniperTableModel extends AbstractTableModel implements SniperListne
     }
 
     public void sniperStateChanged(SniperSnapshot newState) {
+        if (newState.sniperState == SniperState.JOINING) {
+            addSniper(newState);
+        } else {
 
-        sniperSnapshot = newState;
-        statusText = textFor(newState);
-        fireTableRowsUpdated(0, 0);
+            int row = rowMatching(newState);
+            statusText = textFor(newState);
+            sniperSnapshots.set(row, newState);
+            fireTableRowsUpdated(row, row);
+        }
     }
 
     public static String textFor(SniperSnapshot newState) {
-
         return STATUS_TEXT[newState.sniperState.ordinal()];
+    }
+
+    public void addSniper(SniperSnapshot joinning) {
+        sniperSnapshots.add(joinning);
+        statusText = textFor(joinning);
+        int row = rowMatching(joinning);
+        fireTableRowsInserted(row, row);
+    }
+
+    private int rowMatching(SniperSnapshot sniperSnapshot) {
+
+        for (int i = 0; i < sniperSnapshots.size(); i++) {
+            if (sniperSnapshot.isForSameItemAs(sniperSnapshots.get(i))) {
+                return i;
+            }
+        }
+
+        throw new Defect("Cannot find match for  " + sniperSnapshot);
     }
 }
