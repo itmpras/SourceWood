@@ -1,6 +1,7 @@
 package com.prasanna.auctionsniper.ui;
 
 import com.prasanna.auctionsniper.Announcer;
+import com.prasanna.auctionsniper.SniperPortFolio;
 import com.prasanna.auctionsniper.SniperSnapshot;
 import com.prasanna.auctionsniper.UserRequestListner;
 
@@ -25,10 +26,11 @@ public class MainWindow extends JFrame {
     private final Announcer<UserRequestListner> userRequest = Announcer.to(UserRequestListner.class);
 
 
-    public MainWindow(SniperTableModel sniper) throws HeadlessException {
+    public MainWindow(SniperPortFolio portFolio) throws HeadlessException {
 
         super();
-        this.sniperTableModel = sniper;
+        this.sniperTableModel = new SniperTableModel();
+        portFolio.addPortfolioListener(sniperTableModel);
         setName(MAIN_WINDOW_NAME);
         setTitle(MAIN_WINDOW_NAME);
         fillContentPanel(makeSniperTable(), makeControls());

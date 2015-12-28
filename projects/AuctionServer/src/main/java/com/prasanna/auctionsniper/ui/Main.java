@@ -24,9 +24,9 @@ public class Main {
             "CurrentPrice: %d; Increment: %d; Bidder: %s ";
 
     private MainWindow ui;
-    private AuctionSniper auctionSniper;
     public static final String SNIPER_ID = "sniper";
-    private final SniperTableModel sniperTableModel = new SniperTableModel();
+    private final SniperPortFolio sniperPortFolio = new SniperPortFolio();
+
 
     public Main() throws Exception {
         startUI();
@@ -47,7 +47,7 @@ public class Main {
     }
 
     private void addUserRequestListnerForConnection(final AuctionHouse auctionHouse) {
-        ui.addUserRequestListner(new SniperLauncher(auctionHouse, sniperTableModel));
+        ui.addUserRequestListner(new SniperLauncher(auctionHouse, sniperPortFolio));
     }
 
 
@@ -70,7 +70,7 @@ public class Main {
             @Override
             public void run() {
 
-                ui = new MainWindow(sniperTableModel);
+                ui = new MainWindow(sniperPortFolio);
             }
         });
 

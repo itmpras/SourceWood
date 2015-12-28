@@ -11,21 +11,18 @@ import java.util.Set;
 public class SniperLauncher implements UserRequestListner {
 
     private final AuctionHouse auctionHouse;
-    private final SniperTableModel sniperTableModel;
-    private Set<Auction> notToBeGCd = new HashSet<Auction>();
+    private final SniperCollector collector;
 
-    public SniperLauncher(AuctionHouse auctionHouse, SniperTableModel sniperTableModel) {
+    public SniperLauncher(AuctionHouse auctionHouse, SniperCollector collector) {
         this.auctionHouse = auctionHouse;
-        this.sniperTableModel = sniperTableModel;
+        this.collector = collector;
     }
 
     public void joinAuction(String itemid) {
         Auction xmppAuction = auctionHouse.auctionFor(itemid);
-        SniperSnapshot joinning = SniperSnapshot.joinning(itemid);
-        SwingThreadSniperListner swingThreadSniperListner = new SwingThreadSniperListner(sniperTableModel);
-        sniperTableModel.addSniper(joinning);
-        xmppAuction.addActionEventListner(new AuctionSniper(xmppAuction, swingThreadSniperListner, joinning));
-        this.notToBeGCd.add(xmppAuction);
+        AuctionSniper sniper = new AuctionSniper(xmppAuction, itemid);
+        xmppAuction.addActionEventListner(sniper);
+        collector.addSniper(sniper);
         xmppAuction.join();
     }
 

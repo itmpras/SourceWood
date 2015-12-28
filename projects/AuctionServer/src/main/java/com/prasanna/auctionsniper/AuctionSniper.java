@@ -5,21 +5,27 @@ package com.prasanna.auctionsniper;
  */
 public class AuctionSniper implements AuctionEventListner {
 
-    private final SniperListner sniperListner;
+    private SniperListner sniperListner;
     private final Auction auction;
     private boolean isWinning = false;
     private SniperSnapshot sniperSnapshot;
 
-    public AuctionSniper(Auction auction, SniperListner sniperListner, SniperSnapshot sniperSnapshot) {
-
+    public AuctionSniper(Auction auction, String itemID) {
         this.auction = auction;
+        sniperSnapshot = SniperSnapshot.joinning(itemID);
+    }
+
+    public void addSniperListner(SniperListner sniperListner) {
         this.sniperListner = sniperListner;
-        this.sniperSnapshot = sniperSnapshot;
     }
 
     public void auctionClosed() {
         sniperSnapshot = sniperSnapshot.closed();
         notifyChange();
+    }
+
+    public SniperSnapshot getSniperSnapshot() {
+        return sniperSnapshot;
     }
 
     private void notifyChange() {
