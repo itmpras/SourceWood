@@ -1,5 +1,6 @@
-package com.prasanna.auctionsniper;
+package com.prasanna.auctionsniper.xmpp;
 
+import com.prasanna.auctionsniper.AuctionEventListner;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
@@ -26,9 +27,9 @@ public class AuctionMessageTranslator implements MessageListener {
     }
 
     @Override
-    public void processMessage(Chat unusedChat, Message closeMessage) {
+    public void processMessage(Chat unusedChat, Message message) {
 
-        AuctionEvent auctionEvent = AuctionEvent.fromMessage(closeMessage);
+        AuctionEvent auctionEvent = AuctionEvent.fromMessage(message);
 
         if (CLOSE_EVENT.equals(auctionEvent.type())) {
             auctionEventListner.auctionClosed();

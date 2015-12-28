@@ -7,7 +7,9 @@ public interface Auction {
 
     void bid(int amount);
 
-    void join(String userName);
+    void join();
+
+    void addActionEventListner(AuctionEventListner eventListner);
 
 }
 

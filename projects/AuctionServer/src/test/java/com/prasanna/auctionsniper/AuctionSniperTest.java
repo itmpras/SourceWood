@@ -23,7 +23,7 @@ public class AuctionSniperTest {
     private States sniperState;
     private SniperListner sniperListner = ruleMockery.mock(SniperListner.class);
     private Auction auction = ruleMockery.mock(Auction.class);
-    private AuctionSniper auctionSniper = new AuctionSniper(auction, sniperListner, SniperSnapshot.joinning(ITEM_ID));
+    private AuctionSniper auctionSniper = new AuctionSniper(auction, ITEM_ID);
 
     @Before
     public void setUp() throws Exception {

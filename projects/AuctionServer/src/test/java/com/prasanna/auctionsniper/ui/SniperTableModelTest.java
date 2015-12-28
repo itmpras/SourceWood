@@ -50,7 +50,7 @@ public class SniperTableModelTest {
                 }
         );
 
-        sniperTableModel.addSniper(joining);
+        sniperTableModel.addSniperSnapShots(joining);
         sniperTableModel.sniperStateChanged(bidding);
         assertRowMatchesState(0, bidding);
         ruleMockery.assertIsSatisfied();
@@ -88,7 +88,7 @@ public class SniperTableModelTest {
         );
 
         assertEquals(0, sniperTableModel.getRowCount());
-        sniperTableModel.addSniper(joinning);
+        sniperTableModel.addSniperSnapShots(joinning);
 
         assertEquals(1, sniperTableModel.getRowCount());
         assertRowMatchesState(0, joinning);
@@ -106,8 +106,8 @@ public class SniperTableModelTest {
                 }
         );
 
-        sniperTableModel.addSniper(SniperSnapshot.joinning("item0"));
-        sniperTableModel.addSniper(SniperSnapshot.joinning("item1"));
+        sniperTableModel.addSniperSnapShots(SniperSnapshot.joinning("item0"));
+        sniperTableModel.addSniperSnapShots(SniperSnapshot.joinning("item1"));
 
         assertColumnEquals(0, Column.ITEM_IDENTIFIER, "item0");
         assertColumnEquals(1, Column.ITEM_IDENTIFIER, "item1");

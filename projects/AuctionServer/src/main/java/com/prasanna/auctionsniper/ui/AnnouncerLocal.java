@@ -7,10 +7,10 @@ import java.util.ArrayList;
 /**
  * Created by prasniths on 26/12/15.
  */
-public class Announcer {
+public class AnnouncerLocal {
     private ArrayList<UserRequestListner> receiver;
 
-    public Announcer() {
+    public AnnouncerLocal() {
         this.receiver = new ArrayList<UserRequestListner>();
     }
 
